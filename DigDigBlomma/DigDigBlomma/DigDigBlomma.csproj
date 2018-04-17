@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Bullet.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Healthbar.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

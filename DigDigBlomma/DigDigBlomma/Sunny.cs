@@ -15,16 +15,18 @@ namespace DigDigBlomma
     {
         public Texture2D sunnyTex;
         public Rectangle sunnyRec;
+        public float health;
 
         public Sunny()
         {
+            health = 10;
             sunnyTex = TextureLibrary.textures["sunny"];
             sunnyRec = new Rectangle(300, 350, TextureLibrary.textures["sunny"].Width * 2, TextureLibrary.textures["sunny"].Height * 2);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sunnyTex, sunnyRec, Color.White);
+        spriteBatch.Draw(sunnyTex, sunnyRec, Color.White);
         }
 
     }

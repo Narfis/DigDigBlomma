@@ -23,6 +23,7 @@ namespace DigDigBlomma
         Sunny sunny;
         List<Worm> worms;
         List<Bullet> bullets;
+        HealthBar healthBar = new HealthBar();
         enum GameState
         {
             MainMenu,
@@ -72,7 +73,7 @@ namespace DigDigBlomma
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TextureLibrary.LoadContent(Content, "WhiteBox");
-            TextureLibrary.LoadContent(Content, "sunny"); 
+            TextureLibrary.LoadContent(Content, "sunny");
             // TODO: use this.Content to load your game content here
         }
 
@@ -150,7 +151,6 @@ namespace DigDigBlomma
                 {
                     worms[i].Draw(spriteBatch);
                 }
-            
             player.Draw(spriteBatch);
             spriteBatch.End();
 
