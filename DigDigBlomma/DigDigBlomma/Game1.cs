@@ -23,7 +23,8 @@ namespace DigDigBlomma
         Sunny sunny;
         List<Worm> worms;
         List<Bullet> bullets;
-        HealthBar healthBar = new HealthBar();
+        Healthbar healthbar;
+        MainMenu button;
         enum GameState
         {
             MainMenu,
@@ -40,7 +41,10 @@ namespace DigDigBlomma
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            //IsMouseVisible = true;
+            //graphics.IsFullScreen = true;
+            //raphics.PreferredBackBufferHeight = 1080;
+           // graphics.PreferredBackBufferWidth = 1920;
         }
 
         /// <summary>
@@ -59,9 +63,11 @@ namespace DigDigBlomma
             sunny = new Sunny();
             worms = new List<Worm>();
             bullets = new List<Bullet>();
+            healthbar = new Healthbar();
             wormTime = 60;
-
+            button = new MainMenu();
             random = new Random();
+            
         }
 
         /// <summary>
@@ -74,6 +80,10 @@ namespace DigDigBlomma
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TextureLibrary.LoadContent(Content, "WhiteBox");
             TextureLibrary.LoadContent(Content, "sunny");
+            TextureLibrary.LoadContent(Content, "flower");
+            TextureLibrary.LoadContent(Content, "daggis");
+            TextureLibrary.LoadContent(Content, "orm");
+            TextureLibrary.LoadContent(Content, "StartButton");
             // TODO: use this.Content to load your game content here
         }
 
@@ -97,6 +107,7 @@ namespace DigDigBlomma
                 Exit();
             
             player.Update(gameTime, worms);
+            healthbar.Update(gameTime);
             wormTime--;
             int randomX = random.Next(0, 2);
             if (wormTime == -1)
@@ -112,25 +123,42 @@ namespace DigDigBlomma
                 if (randomX == 1)
                 {
                     worms.Last<Worm>().wormRec.X = -100;
-
                 }
                 if (randomX == 0)
                 {
                     worms.Last<Worm>().wormRec.X = 1000;
                     worms.Last<Worm>().speed *= -1;
+                    
                 }
-
 
             }
             for (int i = 0; i < worms.Count; i++)
             {
                 worms[i].Update(gameTime);
+                if (sunny.sunnyRec.Intersects(worms[i].wormRec))
+                {
+                    Sunny.health -= worms[i].damage;
+                    worms.RemoveAt(i);
+                    if (Sunny.health <= 0)
+                    {
+                        
+                      //  sunny.sunnyRec.Y = 100000;
+                        Exit();
+                    }
+                }
 
             }
+            if (player.playerRec.X >= Window.ClientBounds.Width)
+            {
+                player.playerRec.X = -100;
+            }
+            else if(player.playerRec.X <= -100)
+            {
+                player.playerRec.X = Window.ClientBounds.Width;
+            }
+                // TODO: Add your update logic here
 
-            // TODO: Add your update logic here
-
-            base.Update(gameTime);
+                base.Update(gameTime);
         }
         /// <summary>
         /// This is called when the game should draw itself.
@@ -151,6 +179,9 @@ namespace DigDigBlomma
                 {
                     worms[i].Draw(spriteBatch);
                 }
+            healthbar.Draw(spriteBatch);
+            button.Draw(spriteBatch);
+            
             player.Draw(spriteBatch);
             spriteBatch.End();
 
@@ -158,7 +189,7 @@ namespace DigDigBlomma
 
             base.Draw(gameTime);
         }
-
+        
      
     }
 }

@@ -23,7 +23,7 @@ namespace DigDigBlomma
         {
              
             playerPos = new Vector2(350, 50);
-            playerTex = TextureLibrary.textures["WhiteBox"];
+            playerTex = TextureLibrary.textures["flower"];
             playerRec = new Rectangle((int)playerPos.X,(int) playerPos.Y, 100, 100);
             playerSpeed = 10f;
             bullets = new List<Bullet>();

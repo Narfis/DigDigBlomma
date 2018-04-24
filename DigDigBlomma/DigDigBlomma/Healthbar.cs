@@ -7,29 +7,30 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
-using System.Collections;
-using System.Diagnostics;
+
 
 namespace DigDigBlomma
 {
-    class HealthBar
+    class Healthbar
     {
         Sunny sunny = new Sunny();
-
         Texture2D healthTexture;
         Rectangle healthRectangle;
 
-        public HealthBar()
+        public Healthbar()
         {
-       //     healthTexture = TextureLibrary.textures[""];
-            healthRectangle = new Rectangle(50, 20, (int)sunny.health, 20);
+            healthTexture = TextureLibrary.textures["WhiteBox"];
+
         }
 
+        public void Update(GameTime gameTime)
+        {
+            healthRectangle = new Rectangle(50, 20, Sunny.health, 20);
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(healthTexture, healthRectangle, Color.White);
+            spriteBatch.Draw(healthTexture, healthRectangle, Color.LightGreen);
         }
-
     }
 }

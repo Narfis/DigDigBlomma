@@ -12,33 +12,37 @@ namespace DigDigBlomma
 {
     class Worm
     {
-        public Texture2D wormTex;
+        public Texture2D wormTex, ormTex;
         public Rectangle wormRec;
         public float speed;
         Sunny sunny = new Sunny();
+        public int damage = 10;
 
 
         public Worm()
         {
-            
-            wormTex = TextureLibrary.textures["WhiteBox"];
-            wormRec = new Rectangle(-100, 450, wormTex.Width / 5, wormTex.Height / 10);
+            wormTex = TextureLibrary.textures["daggis"];
+            ormTex = TextureLibrary.textures["orm"];
+            wormRec = new Rectangle(-100, 450, wormTex.Width *2, wormTex.Height *2);
             speed = 5f;
+            damage = 10;
             
         }
         public void Update(GameTime gameTime)
         {
             wormRec.X += (int)speed;
-            if (wormRec.Intersects(sunny.sunnyRec))
-            {
-                speed = 0f;
-              
-            }
+
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            
-            spriteBatch.Draw(wormTex, wormRec, Color.DeepPink);
+            if (wormRec.X < 300)
+            {
+                spriteBatch.Draw(ormTex, wormRec, Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(wormTex, wormRec, Color.White);
+            }
         }
     }
 }
