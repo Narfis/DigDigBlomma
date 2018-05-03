@@ -19,15 +19,14 @@ namespace DigDigBlomma
 
         public MainMenu()
         {
-            buttonPos = new Vector2(0, 0);
+            buttonPos = new Vector2(400, 400);
             size = new Vector2(400, 400);
-            buttonTex = TextureLibrary.textures["StartButton"];
         }
         bool down;
         public bool isClicked;
         public void  Update(MouseState mouse)
         {
-            buttonRec = new Rectangle((int)buttonPos.X, (int)buttonPos.Y, (int)size.X / 10, (int)size.Y / 10);
+            buttonRec = new Rectangle((int)buttonPos.X, (int)buttonPos.Y, (int)size.X, (int)size.Y);
             Rectangle mouseRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
 
             if (mouseRectangle.Intersects(buttonRec))
@@ -63,7 +62,6 @@ namespace DigDigBlomma
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(buttonTex, buttonRec, color);
         }
     }
 }

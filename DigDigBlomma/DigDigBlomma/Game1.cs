@@ -18,6 +18,7 @@ namespace DigDigBlomma
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont deadFont;
         float wormTime;
         Player player;
         Sunny sunny;
@@ -25,11 +26,14 @@ namespace DigDigBlomma
         List<Bullet> bullets;
         Healthbar healthbar;
         MainMenu button;
+        SpriteFont font;
+        bool isPaused = true;
         enum GameState
         {
             MainMenu,
-            Options, 
-            Player,
+            Dead, 
+            Playing,
+            Pause,
         }
         GameState gameState = GameState.MainMenu;
 
@@ -42,9 +46,9 @@ namespace DigDigBlomma
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             //IsMouseVisible = true;
-            //graphics.IsFullScreen = true;
-            //raphics.PreferredBackBufferHeight = 1080;
-           // graphics.PreferredBackBufferWidth = 1920;
+           // graphics.IsFullScreen = true;
+           // graphics.PreferredBackBufferHeight = 1080;
+         //  graphics.PreferredBackBufferWidth = 1920;
         }
 
         /// <summary>
@@ -67,7 +71,8 @@ namespace DigDigBlomma
             wormTime = 60;
             button = new MainMenu();
             random = new Random();
-            
+
+
         }
 
         /// <summary>
@@ -83,7 +88,9 @@ namespace DigDigBlomma
             TextureLibrary.LoadContent(Content, "flower");
             TextureLibrary.LoadContent(Content, "daggis");
             TextureLibrary.LoadContent(Content, "orm");
-            TextureLibrary.LoadContent(Content, "StartButton");
+            TextureLibrary.LoadContent(Content, "flower_power");
+            font = Content.Load<SpriteFont>("Score");
+            deadFont = Content.Load<SpriteFont>("dead");
             // TODO: use this.Content to load your game content here
         }
 
@@ -105,11 +112,59 @@ namespace DigDigBlomma
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
-            player.Update(gameTime, worms);
-            healthbar.Update(gameTime);
-            wormTime--;
-            int randomX = random.Next(0, 2);
+            if (gameState == GameState.MainMenu)
+            {
+                isPaused = true;
+            }
+            else
+            {
+                isPaused = false;
+            }
+            switch (gameState)
+            {
+                case GameState.MainMenu:
+                   
+                 //   if(button.isClicked == true)
+                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                    {
+                        gameState = GameState.Playing;
+                        
+                    }
+                    break;
+
+
+                case GameState.Playing:
+                    isPaused = false;
+                    if (Keyboard.GetState().IsKeyDown(Keys.P) && gameState == GameState.Playing)
+                    {
+                        gameState = GameState.Pause;
+                    }
+
+
+                    break;
+
+                case GameState.Pause:
+                    isPaused = true;
+                    if (Keyboard.GetState().IsKeyDown(Keys.P) && gameState == GameState.Pause)
+                    {
+                        gameState = GameState.Playing;
+                    }
+
+
+
+                    break;
+                case GameState.Dead:
+
+
+                    break;
+
+            }
+            if (isPaused == false)
+            {
+                player.Update(gameTime, worms);
+                healthbar.Update(gameTime);
+                wormTime--;
+                int randomX = random.Next(0, 2);
             if (wormTime == -1)
             {
                 wormTime = 60;
@@ -132,18 +187,18 @@ namespace DigDigBlomma
                 }
 
             }
-            for (int i = 0; i < worms.Count; i++)
-            {
-                worms[i].Update(gameTime);
-                if (sunny.sunnyRec.Intersects(worms[i].wormRec))
+                for (int i = 0; i < worms.Count; i++)
                 {
-                    Sunny.health -= worms[i].damage;
-                    worms.RemoveAt(i);
-                    if (Sunny.health <= 0)
+                    worms[i].Update(gameTime);
+                    if (sunny.sunnyRec.Intersects(worms[i].wormRec))
                     {
-                        
-                      //  sunny.sunnyRec.Y = 100000;
-                        Exit();
+                        Sunny.health -= worms[i].damage;
+                        worms.RemoveAt(i);
+                        if (Sunny.health <= 0)
+                        {
+                            //  sunny.sunnyRec.Y = 100000;
+                           gameState = GameState.Dead;
+                        }
                     }
                 }
 
@@ -169,20 +224,63 @@ namespace DigDigBlomma
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            sunny.Draw(spriteBatch);
+
             /*   if (worm != null)
                {
                    spriteBatch.Draw(worm, wormRec, wormColor);
                }*/
-           
-                for (int i = 0; i < worms.Count; i++)
-                {
-                    worms[i].Draw(spriteBatch);
-                }
-            healthbar.Draw(spriteBatch);
-            button.Draw(spriteBatch);
+
             
-            player.Draw(spriteBatch);
+                switch (gameState)
+                {
+                    case GameState.MainMenu:
+                        button.Draw(spriteBatch);
+                        IsMouseVisible = true;
+                        break;
+
+
+                    case GameState.Playing:
+                        sunny.Draw(spriteBatch);
+                        for (int i = 0; i < worms.Count; i++)
+                        {
+                            worms[i].Draw(spriteBatch);
+                        }
+                        healthbar.Draw(spriteBatch);
+                    spriteBatch.DrawString(font,"Score:" + Bullet.score.ToString(), new Vector2(GraphicsDevice.Viewport.Width - 100, 10), Color.White);
+                        player.Draw(spriteBatch);
+
+                        break;
+                     case GameState.Pause:
+                    sunny.Draw(spriteBatch);
+                    for (int i = 0; i < worms.Count; i++)
+                    {
+                        worms[i].Draw(spriteBatch);
+                    }
+                    healthbar.Draw(spriteBatch);
+
+                    player.Draw(spriteBatch);
+
+                    break;
+                case GameState.Dead:
+                    spriteBatch.DrawString(deadFont, "Died".ToString(), new Vector2(100, 100), Color.White);
+                    if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    {
+                        Exit();
+                    }
+                    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                    {
+                        player.playerRec.X = 350;
+                        Bullet.score = 0;
+                        Sunny.health = 100;
+                      gameState =  GameState.Playing;
+                        
+
+                    }
+
+                    break;
+
+                }
+            
             spriteBatch.End();
 
             // TODO: Add your drawing code here

@@ -19,6 +19,7 @@ namespace DigDigBlomma
         List<Bullet> bullets;
 
 
+
         public Player()
         {
              

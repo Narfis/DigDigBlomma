@@ -16,16 +16,19 @@ namespace DigDigBlomma
         public float speed;
         public Texture2D bulletTex;
        public bool isVisible = true;
+        public static int score = 0;
+
 
 
         public Bullet(Point playerPosition)
         {
-            bulletTex = TextureLibrary.textures["WhiteBox"];
-            bulletRec = new Rectangle(playerPosition.X + 45, playerPosition.Y+ 30, 10, 10);
+            bulletTex = TextureLibrary.textures["flower_power"];
+            bulletRec = new Rectangle(playerPosition.X + 35, playerPosition.Y + 50, 25, 25);
             isVisible = false;
             speed = 10f;
 
-        }        
+
+        }
         public void Update(GameTime gameTime, List<Worm> worms)
         {
             for (int i = 0; i < worms.Count; i++)
@@ -34,6 +37,7 @@ namespace DigDigBlomma
                 {
                     worms.RemoveAt(i);
                     i--;
+                    score = score + 1;
                 }
             }
             
